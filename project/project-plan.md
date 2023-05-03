@@ -33,7 +33,11 @@ Charging station location data from above mentioned data sources or the Eco-Move
 
 <!-- List of work packages ordered sequentially, each pointing to an issue with more details. -->
 
-1. Example Issue [#1][i1]
-2. ...
+1. Data Extraction [#1](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/1)
+2. Clean Data [#2](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/2)
+3. Test Automation [#4](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/4)
+4. CI & CD [#5](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/5)
+5. Analysis & Graph Visualization [#6](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/6)
+6. Evaluation result [#7](https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues/7)
 
-[i1]: https://github.com/jvalue/2023-amse-template/issues/1
+* https://github.com/um59ipuh/2023-SAKI-um59ipuh-sarker/issues
