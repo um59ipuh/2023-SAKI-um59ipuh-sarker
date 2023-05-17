@@ -4,6 +4,8 @@
 import json
 import requests as req
 import datetime
+import io
+import csv
 
 def crawl():
     # load json for info
@@ -28,8 +30,14 @@ def crawl():
         timestamp = current_time.strftime("%Y%m%d%H%M%S")
         file_name = f"mobilitek_data_{timestamp}.csv"
         
-        with open(f"files/{file_name}", 'wb') as file:
-            file.write(response.content)
+        # Create a file-like object from the response content
+        file_obj = io.StringIO(response.content.decode('utf-8'))
+        reader = csv.reader(file_obj, delimiter=";")
+        
+        with open(f"files/{file_name}", 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerows(reader)
+            
         print("File downloaded successfully.")
     else:
         print("Failed to download the file.")
