@@ -23,6 +23,7 @@ pipeline AirportPipeline {
             "column_3" oftype text,
             "column_4" oftype text,
             "column_5" oftype text,
+            "column_6" oftype text,
             "column_7" oftype decimal,
             "column_8" oftype decimal,
             "column_9" oftype integer,
