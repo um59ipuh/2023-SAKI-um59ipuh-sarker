@@ -3,14 +3,17 @@
        {
           "name":"mobilithek",
           "meta_url":"https://mobilithek.info/offers/-2989425250318611078",
-          "absolute_url":"https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-ladesaulen-in-deutschland/exports/csv"
+          "absolute_url":"https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/rhein-kreis-neuss-ladesaulen-in-deutschland/exports/csv",
+          "db_table": "mobi"
        },
        {
           "name":"kba",
           "tag": "links downloads",
           "csstag":"",
           "meta_url":"https://www.kba.de/DE/Statistik/Fahrzeuge/Neuzulassungen/Umwelt/n_umwelt_node.html",
-          "absolute_url":"https://www.kba.de/SharedDocs/Downloads/DE/Statistik/Fahrzeuge/FZ28/fz{}.xlsx?__blob=publicationFile&v={}"
+          "absolute_url":"https://www.kba.de/SharedDocs/Downloads/DE/Statistik/Fahrzeuge/FZ28/fz{}.xlsx?__blob=publicationFile&v={}",
+          "sheet_name" : "FZ 28.9",
+          "db_table": "kba"
        }
     ]
  }

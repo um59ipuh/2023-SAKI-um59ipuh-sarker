@@ -1,5 +1,10 @@
 /data/files/
 /data/data.sqlite
-*.csv
+*-raw.csv
 *.xlxs
 /exercises/*.sqlite
+/data/*-raw.csv
+.pytest_cache
+.vscode
+/data/__py*
+/data/.py*
