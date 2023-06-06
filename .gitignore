@@ -8,3 +8,5 @@
 .vscode
 /data/__py*
 /data/.py*
+/data/D_Bahnhof_2020_alle.CSV
+.DS_Store
