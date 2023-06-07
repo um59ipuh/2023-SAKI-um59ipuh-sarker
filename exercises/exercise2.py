@@ -34,8 +34,10 @@ def transform(df):
     pattern = r'\b\w{2}:\d+:\d+(:\d+)?\b'
     df = df[df['IFOPT'].str.contains(pattern)]
     log.debug('Check pattern and validate.')
+    
+    # change type of column
+    df['Betreiber_Nr'] = df['Betreiber_Nr'].astype(int)
     return df
-    pass
 
 
 def load_into_db(data, db_name, table_name):
