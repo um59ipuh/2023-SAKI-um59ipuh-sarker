@@ -1,0 +1,95 @@
+// Car data ETL pipeline
+pipeline CarsPipeline {
+
+    // download car data from online :: Input: None -> Output: File
+	block CarsExtractor oftype HttpExtractor {
+		url: "https://www-genesis.destatis.de/genesis/downloads/00/tables/46251-0021_00.csv";
+	}
+
+    // make downloaded binary to textfile :: Input: File -> Output: TextFile, Encoding :: ASCII
+	block CarsTextFileInterpreter oftype TextFileInterpreter {
+        encoding: "ASCII";
+	}
+
+    // Selects a range of lines from a TextFile. :: TextFile -> TextFile
+    block CarsTextRangeSelector oftype TextRangeSelector {
+        lineFrom: 7;
+        lineTo: 483;
+    }
+
+    // Interprets the TextFile as a csv-file containing string-values delimited by ;. :: TextFile -> Sheet
+	block CarsCSVInterpreter oftype CSVInterpreter {
+		delimiter: ';';
+	}
+
+    // Deletes columns from a Sheet :: Sheet -> Sheet
+    block CarsColumnDeleter oftype ColumnDeleter {
+         delete: [
+            column D, column E, column F, column G, column H, column I, column J, 
+            column K, column L, column N, column O, column P, column Q, column R, 
+            column S, column T, column U, column V, column X, column Y, column Z,
+            column AA, column AB, column AC, column AD, column AE, column AF, column AH,
+            column AI, column AJ, column AK, column AL, column AM, column AN, column AO,
+            column AP, column AR, column AS, column AT, column AU, column AV, column AW,
+            column AX, column AY, column AZ, column BB, column BC, column BD, column BE,
+            column BF, column BG, column BH, column BI, column BJ, column BL, column BM,
+            column BN, column BO, column BP, column BQ, column BR, column BS, column BT, 
+            column BV, column BW, column BX, column BY, column BZ, column CA, column CB, 
+            column CC, column CD, column CE
+            ];
+	}
+
+    // Text type with the constraint of fixed 5 characters :: custom type 
+    valuetype FixedFiveCharacters oftype text {
+        constraints: [FixedFiveCharactersConstraint];
+    }
+
+    // custom constraint
+    constraint FixedFiveCharactersConstraint oftype LengthConstraint {
+        minLength: 5;
+        maxLength: 5;
+    }
+
+    // Integer type with the constraint of positive values
+    valuetype PositiveInteger oftype integer {
+        constraints: [PositiveIntegerConstraint];
+    }
+
+    // custom constraint for positive integer > 0
+    constraint PositiveIntegerConstraint oftype RangeConstraint {
+        lowerBound: 0;
+        lowerBoundInclusive: false;
+    }
+
+    // Interprets sheet to table with valuetype to each column. :: Sheet -> Table
+	block CarsTableInterpreter oftype TableInterpreter {
+		header: false;
+		columns: [
+			"date" oftype text,
+			"CIN" oftype FixedFiveCharacters,
+			"name" oftype text,
+			"petrol" oftype PositiveInteger,
+			"diesel" oftype PositiveInteger,
+			"gas" oftype PositiveInteger,
+			"electro" oftype PositiveInteger,
+			"hybrid" oftype PositiveInteger,
+			"plugInHybrid" oftype PositiveInteger,
+			"others" oftype PositiveInteger
+		];
+	}
+
+    // load data into sqlite
+	block CarsLoader oftype SQLiteLoader {
+		table: "cars";
+		file: "./cars.sqlite";
+	}
+
+    // combined pipeline
+    CarsExtractor 
+        -> CarsTextFileInterpreter
+        -> CarsTextRangeSelector
+        -> CarsCSVInterpreter
+        -> CarsColumnDeleter
+        -> CarsTableInterpreter
+        -> CarsLoader;
+}
