@@ -1,2 +1,0 @@
-- Test CI workflow - testing 1 - failed with no such file found for requirements.txt
-- Test CI workflow - testing 2

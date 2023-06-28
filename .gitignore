@@ -1,12 +1,11 @@
-/data/files/
-/data/data.sqlite
+/project/data/files/
 *-raw.csv
 *.xlxs
 /exercises/*.sqlite
-/data/*-raw.csv
+/project/data/*-raw.csv
 .pytest_cache
 .vscode
-/data/__py*
-/data/.py*
-/data/D_Bahnhof_2020_alle.CSV
+/project/data/__py*
+/project/data/.py*
+/project/data/D_Bahnhof_2020_alle.CSV
 .DS_Store
