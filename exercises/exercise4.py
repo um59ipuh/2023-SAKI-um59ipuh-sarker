@@ -17,11 +17,17 @@ def extract_data(url):
         csv_file_name = 'data.csv'
         extracted_csv_path = zip_ref.extract(csv_file_name)
 
+    intended_types = {
+        'Temperatur in °C (DWD)': 'float',
+        'Batterietemperatur in °C': 'float'
+    }
+
     # Read the extracted CSV file into a Pandas DataFrame
-    df = pd.read_csv(extracted_csv_path, delimiter=";", on_bad_lines='skip', header=None)
+    df = pd.read_csv(extracted_csv_path, delimiter=";", decimal=',', usecols=range(11), dtype=intended_types, header=None)
     df.columns = df.iloc[0]
-    df = df.iloc[1:]
+    df.drop(index=0, inplace=True)
     log.info(f"Extract data from : {url}.")
+
     # clean data
     os.remove(zip_file_path)
     os.remove(csv_file_name)
@@ -29,7 +35,7 @@ def extract_data(url):
     return df
 
 def reshape_date(df):
-    # keep selected columns only
+    # select specific column
     selected_columns = [
         'Geraet',
         'Hersteller',
@@ -49,15 +55,15 @@ def reshape_date(df):
     df = df.rename(columns=column_mapping)
     
     # drop duplicate columns
-    df = df.loc[:,~df.columns.duplicated()].copy()
+    # df = df.loc[:,~df.columns.duplicated()].copy()
     
     return df
 
 # ------------ Transform data (T) -----------
 def transform(df):
     # transform column value from celsius to farenheit
-    df['Temperatur'] = (df['Temperatur'].str.replace(',','.').apply(float) * 9/5) + 32
-    df['Batterietemperatur'] = (df['Batterietemperatur'].str.replace(',','.').apply(float) * 9/5) + 32
+    df['Temperatur'] = (df['Temperatur'].apply(lambda x: x.replace(',','.')).astype(float) * 9/5) + 32
+    df['Batterietemperatur'] = (df['Batterietemperatur'].apply(lambda x: x.replace(',','.')).astype(float) * 9/5) + 32
     
     return df
 
@@ -70,7 +76,7 @@ def validate_date(df):
 
 def load_into_db(data, db_name, table_name, sqlite_types):
     # import module and create connection
-    from sqlalchemy import create_engine
+    # from sqlalchemy import create_engine
     import sqlite3
     
     # engine = create_engine(f"sqlite:///{db_name}.sqlite", echo=False)
