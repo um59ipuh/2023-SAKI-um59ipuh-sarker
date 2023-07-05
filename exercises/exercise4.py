@@ -88,10 +88,10 @@ def processETL():
         'Geraet': 'BIGINT',
         'Hersteller': 'TEXT',
         'Model': 'TEXT',
-        'Monat': 'TEXT',
+        'Monat': 'BIGINT',
         'Temperatur': 'FLOAT',
         'Batterietemperatur': 'FLOAT',
-        'Geraet aktiv': 'BIGINT'
+        'Geraet aktiv': 'TEXT'
     }
     
     # ETL Pipeline
