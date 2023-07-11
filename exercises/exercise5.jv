@@ -1,0 +1,80 @@
+valuetype ZoneValue oftype integer {
+    constraints: [
+        ZoneOverValue,
+    ];
+}
+
+constraint ZoneOverValue oftype RangeConstraint {
+  lowerBound: 2001;
+  lowerBoundInclusive: true;
+  upperBound: 2001;
+}
+
+valuetype Coordinates oftype decimal {
+    constraints: [
+        CoordinateRange,
+    ];
+}
+
+constraint CoordinateRange oftype RangeConstraint {
+  lowerBound: -90;
+  lowerBoundInclusive: true;
+  upperBound: 90; 
+  upperBoundInclusive: true;     
+}
+
+
+pipeline FuldaBusStopsDataPipeline {
+
+    block BSDataExtractor  oftype HttpExtractor {
+        url: "https://gtfs.rhoenenergie-bus.de/GTFS.zip";
+    }
+
+    block BSZipInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+    // pick only stops.txt
+    block BSTextFilePicker oftype FilePicker {
+        path: "/stops.txt";
+    }
+
+    // textfile interpreter with default encoding as utf-8
+    block BSFileInterpreter oftype TextFileInterpreter {
+	}
+
+    block BSCSVInterpreter oftype CSVInterpreter {
+        enclosing: '"';
+        enclosingEscape: '"';
+    }
+
+    // delete column that are not picked 
+    block BSColumnDeleter oftype ColumnDeleter {
+        delete: [column B, column D, column H, column I, column J, column K, column L];
+    }
+
+	block BSTableInterpreter oftype TableInterpreter {
+		header: true;
+        columns: [
+			"stop_id" oftype integer,
+			"stop_name" oftype text,
+			"stop_lat" oftype Coordinates,
+			"stop_lon" oftype Coordinates,
+			"zone_id" oftype ZoneValue,
+		];
+	}
+
+	block BSLoader oftype SQLiteLoader {
+		table: "stops";
+		file: "./gtfs.sqlite";
+	}
+
+    BSDataExtractor
+    -> BSZipInterpreter
+    -> BSTextFilePicker
+    -> BSFileInterpreter
+    -> BSCSVInterpreter
+    -> BSColumnDeleter
+    -> BSTableInterpreter
+    -> BSLoader;
+}
